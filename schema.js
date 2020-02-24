@@ -14,7 +14,7 @@ const {
 } = require('@keystonejs/fields');
 const { CloudinaryAdapter } = require('@keystonejs/file-adapters');
 const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
-
+const gql = require('graphql-tag');
 const cloudinaryAdapter = new CloudinaryAdapter({
 	cloudName: process.env.CLOUDINARY_CLOUD_NAME,
 	apiKey: process.env.CLOUDINARY_KEY,
@@ -73,8 +73,7 @@ exports.User = {
 			many: true
 		},
 		wallet: {
-			type: Integer,
-			defaultValue: 0
+			type: Integer
 		}
 	},
 	hooks: {
@@ -122,6 +121,7 @@ exports.Event = {
 		status: { type: Select, options: 'draft, active', defaultValue: 'draft' },
 		themeColor: { type: Text },
 		startTime: { type: DateTime },
+		endTime: { type: DateTime },
 		durationMins: { type: Integer },
 		description: { type: Wysiwyg },
 		talks: { type: Relationship, ref: 'Talk.event', many: true },
@@ -192,24 +192,43 @@ exports.Rsvp = {
 		endTime: { type: DateTime }
 	},
 	hooks: {
-		// afterChange: async ({ resolvedData, existingItem, actions }) => {
-		// 	if (resolvedData.amount && !existingItem.amount) {
-		// 		const { data } = await actions.query(`
-		//         mutation updateUser(
-		//           $userId: ID!,
-		//           $amount: Int!,
-		//         ) {
-		//           updateUser(id: $userId,data: {
-		//             wallet: amount
-		//           }) {
-		//             id
-		//             wallet
-		//           }
-		//         }
-		//       `, {variables: {
-		//       }});
-		// 	}
-		// },
+		afterChange: async props => {
+			try {
+				if (
+					props.originalInput.amount &&
+					props.existingItem &&
+					!props.existingItem.amount
+				) {
+					console.log(props.originalInput, props.existingItem);
+					const wallet =
+						(props.context.authedItem.wallet
+							? props.context.authedItem.wallet
+							: 0) - props.originalInput.amount;
+					console.log(wallet, props.context.authedItem.id, props.actions);
+
+					const result = await props.actions.query(
+						`
+							mutation updateUser($id: ID!, $wallet: Int!) {
+								updateUser(id: $id, data: { wallet: $wallet }) {
+									id
+									wallet
+								}
+							}
+						`,
+						{
+							variables: {
+								id: props.context.authedItem.id,
+								wallet
+							},
+							skipAccessControl: true
+						}
+					);
+					console.log(result);
+				}
+			} catch (err) {
+				console.log(err);
+			}
+		},
 		validateInput: async ({ resolvedData, existingItem, actions }) => {
 			const { status } = resolvedData;
 			const { event: eventId } = existingItem ? existingItem : resolvedData;

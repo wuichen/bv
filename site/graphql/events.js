@@ -27,6 +27,18 @@ export const EVENT_DATA = gql`
 	${USER_IMAGE}
 `;
 
+export const GET_HAPPENING_EVENTS = gql`
+	query GetHappeningEvents {
+		allEvents(
+			where: { startTime_not: null, endTime: null }
+			orderBy: "startTime_DESC"
+		) {
+			...EventData
+		}
+	}
+	${EVENT_DATA}
+`;
+
 export const GET_CURRENT_EVENTS = gql`
 	query GetCurrentEvents($now: DateTime!) {
 		upcomingEvents: allEvents(
@@ -64,6 +76,7 @@ export const GET_EVENT_DETAILS = gql`
 		}
 		allRsvps(where: { event: { id: $event }, user_is_null: false }) {
 			id
+			numberOfGuests
 			user {
 				id
 				name

@@ -17,7 +17,7 @@ export default function Events() {
 	return (
 		<>
 			<Meta title="Events" />
-			<Navbar background="white" />
+			<Navbar background="black" />
 			<Container css={{ marginTop: gridSize * 3 }}>
 				<H2>Events</H2>
 				<Query query={GET_ALL_EVENTS}>

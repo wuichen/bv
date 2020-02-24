@@ -23,6 +23,7 @@ import { GET_EVENT_DETAILS } from '../../graphql/events';
 import {
 	isInFuture,
 	formatFutureDate,
+	isInToday,
 	formatPastDate,
 	stripTags
 } from '../../helpers';
@@ -57,13 +58,13 @@ export default class Event extends Component {
 						description,
 						name,
 						startTime,
+						endTime,
 						locationAddress,
 						themeColor,
 						talks
 					} = data.Event;
 					const { allRsvps } = data;
-
-					const prettyDate = isInFuture(startTime)
+					const prettyDate = endTime
 						? formatFutureDate(startTime)
 						: formatPastDate(startTime);
 
@@ -89,26 +90,34 @@ export default class Event extends Component {
 								<Html markup={description} />
 							</Hero>
 
-							<Container css={{ marginTop: gridSize * 3 }}>
+							<Container
+								css={{ marginTop: gridSize * 3, marginBottom: '150px' }}
+							>
 								<div css={mq({ float: [null, 'right'] })}>
 									<Rsvp event={data.Event} themeColor={themeColor}>
 										{({ message, component }) => component || message}
 									</Rsvp>
 								</div>
-								<H2
+								{/*<H2
 									hasSeparator
 									css={mq({ marginBottom: '2rem', marginTop: ['2rem', null] })}
 								>
 									Talks
 								</H2>
-								<Talks talks={talks} />
+								<Talks talks={talks} />*/}
 
 								<div css={{ textAlign: 'center', marginTop: '3em' }}>
-									<H1 as="h3">{allRsvps.length}</H1>
+									<H1 as="h3">
+										{allRsvps.reduce((total, rsvp) => {
+											return (
+												(rsvp.numberOfGuests ? rsvp.numberOfGuests : 1) + total
+											);
+										}, 0)}
+									</H1>
 									<div css={{ fontSize: fontSizes.md }}>
-										{isInFuture(startTime)
-											? 'People are attending this meetup'
-											: 'People attended this meetup'}
+										{isInToday(startTime)
+											? 'People are attending this event'
+											: 'People attended this event'}
 									</div>
 
 									<div
@@ -124,19 +133,20 @@ export default class Event extends Component {
 											.map(rsvp => (
 												<div
 													key={rsvp.id}
-													css={{ marginLeft: '0.25em', marginRight: '0.25em' }}
+													css={{ marginLeft: '20px', marginRight: '20px' }}
 												>
 													<Avatar
 														alt={`${rsvp.user.name} Avatar`}
 														name={rsvp.user.name}
 														src={rsvp.user.image && rsvp.user.image.small}
 													/>
+													<div>{rsvp.user.name}</div>
 												</div>
 											))}
 									</div>
 								</div>
 							</Container>
-							<Footer />
+							{/*<Footer />*/}
 						</>
 					);
 				}}

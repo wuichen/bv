@@ -9,7 +9,7 @@ import {
 } from '../primitives';
 import { useAuth } from '../lib/authentication';
 import { GET_RSVPS, UPDATE_RSVP, ADD_RSVP } from '../graphql/rsvps';
-
+import { isInToday } from '../helpers';
 import AuthModal from './auth/modal';
 import { Input } from '../primitives/forms';
 import { useState, useEffect } from 'react';
@@ -60,20 +60,21 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 	}
 
 	if (!isAuthenticated) {
-		return children({
-			component: (
-				<AuthModal mode="signin">
-					{({ openModal }) => (
-						<ButtonWrapper>
-							<span css={{ marginRight: '0.5em', flex: 1 }}>{text}</span>
-							<Button href="/signin" onClick={openModal}>
-								Sign In
-							</Button>
-						</ButtonWrapper>
-					)}
-				</AuthModal>
-			)
-		});
+		return event.endTime
+			? null
+			: children({
+					component: (
+						<AuthModal mode="signin">
+							{({ openModal }) => (
+								<ButtonWrapper>
+									<Button href="/signin" onClick={openModal}>
+										Sign In to join
+									</Button>
+								</ButtonWrapper>
+							)}
+						</AuthModal>
+					)
+			  });
 	}
 
 	return (
@@ -112,6 +113,9 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 					{
 						query: GET_RSVPS,
 						variables: { event: eventId, user: user.id }
+					},
+					{
+						query: USER
 					}
 				];
 
@@ -150,11 +154,10 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 							return children({
 								component: (
 									<ButtonWrapper>
-										<span css={{ marginRight: '0.5em', flex: 1 }}>{text}</span>
 										{userResponse && userResponse.status === 'yes' ? (
 											<Button
 												disabled={mutationLoading || !!userResponse.endTime}
-												isSelected={!!userResponse.endTime}
+												isSelected={userResponse.endTime}
 												background={themeColor}
 												onClick={async () => {
 													try {
@@ -162,8 +165,16 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 															(((thisMoment.getTime() -
 																new Date(userRsvps[0].startTime).getTime()) /
 																60000) *
-																(event.rate / 60)) /
-																eventRsvps.length
+															userRsvps[0].numberOfGuests
+																? userRsvps[0].numberOfGuests
+																: 1 * (event.rate / 60)) /
+																eventRsvps.reduce((total, rsvp) => {
+																	return (
+																		(rsvp.numberOfGuests
+																			? rsvp.numberOfGuests
+																			: 1) + total
+																	);
+																}, 0)
 														);
 														console.log(amount, thisMoment, userRsvps);
 														await updateRsvp({
@@ -180,14 +191,18 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 													}
 												}}
 											>
-												Check out
+												{userResponse.endTime ? 'Checked out' : 'Check out'}
 											</Button>
 										) : (
 											<>
+												<span css={{ marginRight: '0.5em', flex: 1 }}>
+													{text}
+												</span>
+
 												<select
 													defaultValue={numberOfGuests}
 													onChange={e => {
-														setNumberOfGuests(e.target.value);
+														setNumberOfGuests(parseInt(e.target.value));
 													}}
 													style={{
 														border: 'none',
@@ -273,6 +288,39 @@ const UPDATE_USER = gql`
 			name
 			email
 			wallet
+		}
+	}
+`;
+
+const USER = gql`
+	query user {
+		authenticatedUser {
+			id
+			name
+			email
+			twitterHandle
+			wallet
+			rsvps {
+				id
+				paid
+				startTime
+				endTime
+				amount
+				event {
+					name
+				}
+			}
+			image {
+				publicUrlTransformed(
+					transformation: {
+						quality: "40"
+						width: "90"
+						height: "90"
+						crop: "thumb"
+						page: "1"
+					}
+				)
+			}
 		}
 	}
 `;

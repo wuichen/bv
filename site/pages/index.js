@@ -8,7 +8,7 @@ import EventItems from '../components/EventItems';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Meta from '../components/Meta';
-import { GET_CURRENT_EVENTS } from '../graphql/events';
+import { GET_CURRENT_EVENTS, GET_HAPPENING_EVENTS } from '../graphql/events';
 import { GET_EVENT_RSVPS } from '../graphql/rsvps';
 import { GET_SPONSORS } from '../graphql/sponsors';
 
@@ -255,6 +255,17 @@ const Sponsors = () => {
 	);
 };
 
+function processHappeningEvent(data) {
+	if (data && data.allEvents && data.allEvents.length > 0) {
+		return {
+			featuredEvent: data.allEvents[0]
+		};
+	}
+	return {
+		featuredEvent: null
+	};
+}
+
 function processEventsData(data) {
 	if (!data || !data.upcomingEvents || !data.previousEvents) {
 		return {
@@ -297,9 +308,9 @@ export default class Home extends Component {
 		const { meetup } = publicRuntimeConfig;
 
 		return (
-			<Query query={GET_CURRENT_EVENTS} variables={{ now }}>
+			<Query query={GET_HAPPENING_EVENTS}>
 				{({ data: eventsData, loading: eventsLoading, error: eventsError }) => {
-					const { featuredEvent, moreEvents } = processEventsData(eventsData);
+					const { featuredEvent } = processHappeningEvent(eventsData);
 					return (
 						<div>
 							<Meta titleExclusive={meetup.name} description={meetup.intro} />
@@ -322,7 +333,7 @@ export default class Home extends Component {
 									<Sponsors />
 								</Container>
                 </Section>*/}
-							{moreEvents.length ? (
+							{/*moreEvents.length ? (
 								<>
 									<Section
 										css={{
@@ -360,7 +371,7 @@ export default class Home extends Component {
 									</Section>
 								</>
 							) : null}
-							{/*<Footer />*/}
+							<Footer />*/}
 						</div>
 					);
 				}}

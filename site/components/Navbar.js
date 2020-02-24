@@ -156,12 +156,12 @@ const Navbar = ({ background = 'white', ...props }) => {
 		<ThemeContext.Provider value={{ background, foreground }}>
 			<Header {...props}>
 				<Link href="/" passHref>
-					<h1 style={{ color: 'white' }}>BV</h1>
+					<h1 style={{ color: 'white', marginRight: '10px' }}>BV</h1>
 				</Link>
 				<div css={{ flex: 1 }}>
 					<NavLink href="/">Now</NavLink>
 					<NavLink href="/events">Events</NavLink>
-					<NavLink href="/profile">Profile</NavLink>
+					{user && <NavLink href="/profile">Profile</NavLink>}
 				</div>
 				{isAuthenticated ? <UserActions user={user} /> : <AnonActions />}
 			</Header>

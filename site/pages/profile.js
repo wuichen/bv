@@ -9,6 +9,26 @@ import { AvatarUpload } from '../components/AvatarUpload';
 import Meta from '../components/Meta';
 import { Button, Field, Group, Label, Link, Input } from '../primitives/forms';
 const onChange = handler => e => handler(e.target.value);
+// export default () => {
+// 	const { isAuthenticated, user } = useAuth();
+// 	if (isAuthenticated) {
+// 		return (
+// 			<>
+// 				<Meta title={user.name} />
+// 				<Navbar background="black" />
+// 				{/*<Profile {...this.props} />*/}
+// 				<NewProfile user={user} />
+// 			</>
+// 		);
+// 	} else {
+// 		return (
+// 			<>
+// 				<Navbar background="black" />
+// 				<h3>Please log in</h3>
+// 			</>
+// 		);
+// 	}
+// };
 
 export default class ProfilePage extends Component {
 	static async getInitialProps(ctx) {
@@ -99,6 +119,9 @@ const NewProfile = ({ user }) => {
 		[name, email, password, confirmPassword]
 	);
 
+	const unSelectedStyle = { backgroundColor: 'white', color: 'black' };
+	const selectedStyle = { backgroundColor: 'black', color: 'white' };
+
 	return (
 		<div
 			style={{
@@ -109,8 +132,19 @@ const NewProfile = ({ user }) => {
 			}}
 		>
 			<div style={{ marginBottom: '40px' }}>
-				<Button onClick={() => setTab('info')}>Info</Button> &nbsp;
-				<Button onClick={() => setTab('booking')}>Booking</Button>
+				<Button
+					style={tab === 'info' ? selectedStyle : unSelectedStyle}
+					onClick={() => setTab('info')}
+				>
+					Info
+				</Button>{' '}
+				&nbsp;
+				<Button
+					style={tab === 'booking' ? selectedStyle : unSelectedStyle}
+					onClick={() => setTab('booking')}
+				>
+					Booking
+				</Button>
 			</div>
 			{tab === 'booking' && (
 				<>
@@ -151,6 +185,7 @@ const NewProfile = ({ user }) => {
 						</p>
 					)}
 					<AvatarUpload userId={user.id} size="xlarge" />
+					<h3>Wallet: {user.wallet}</h3>
 
 					<form noValidate onSubmit={handleSubmit}>
 						<Field>
@@ -351,6 +386,7 @@ const USER = gql`
 			name
 			email
 			twitterHandle
+			wallet
 			rsvps {
 				id
 				paid
@@ -394,6 +430,7 @@ const UPDATE_USER = gql`
 			}
 		) {
 			id
+			wallet
 			name
 			email
 			twitterHandle

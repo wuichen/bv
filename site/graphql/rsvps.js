@@ -72,12 +72,17 @@ export const GET_RSVPS = gql`
 	query GetRsvps($event: ID!, $user: ID!) {
 		eventRsvps: allRsvps(where: { event: { id: $event }, status: yes }) {
 			id
+			status
+			startTime
+			endTime
+			numberOfGuests
 		}
 		userRsvps: allRsvps(where: { event: { id: $event }, user: { id: $user } }) {
 			id
 			status
 			startTime
 			endTime
+			numberOfGuests
 		}
 		event: Event(where: { id: $event }) {
 			id

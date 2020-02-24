@@ -1,32 +1,32 @@
 import { useEffect } from 'react';
-import { format, isFuture } from 'date-fns';
+import { format, isFuture, isToday } from 'date-fns';
 import getConfig from 'next/config';
 import contrast from 'get-contrast';
 
 import { colors } from '../theme';
 
 const {
-  publicRuntimeConfig: { meetup },
+	publicRuntimeConfig: { meetup }
 } = getConfig();
 
 // Check if date is in future or past
 export const isInFuture = date => isFuture(date);
-
+export const isInToday = date => isToday(date);
 // Pretty date formatting
 export const formatFutureDate = date => format(date, 'ddd D MMM, h:mm A');
 export const formatPastDate = date => format(date, 'MMM YYYY');
 
 // Singular / Plural
 export const pluralLabel = (num, single, plural) => {
-  return num === 1 ? `${num} ${single}` : `${num} ${plural}`;
+	return num === 1 ? `${num} ${single}` : `${num} ${plural}`;
 };
 
 // Get A11Y contrast-compliant foreground color from background color
 export const getForegroundColor = backgroundColor => {
-  const darkFgScore = contrast.ratio(colors.greyDark, backgroundColor);
-  const lightFgScore = contrast.ratio('white', backgroundColor);
+	const darkFgScore = contrast.ratio(colors.greyDark, backgroundColor);
+	const lightFgScore = contrast.ratio('white', backgroundColor);
 
-  return darkFgScore - lightFgScore > 1 ? colors.greyDark : 'white';
+	return darkFgScore - lightFgScore > 1 ? colors.greyDark : 'white';
 };
 
 // ==============================
@@ -35,30 +35,30 @@ export const getForegroundColor = backgroundColor => {
 
 // Logo dimensions
 export const useLogoDimension = () => {
-  const logoWidth = meetup.logo.width;
-  const logoHeight = meetup.logo.height;
-  const logoWidthSm = logoWidth / 1.5;
-  const logoHeightSm = logoHeight / 1.5;
+	const logoWidth = meetup.logo.width;
+	const logoHeight = meetup.logo.height;
+	const logoWidthSm = logoWidth / 1.5;
+	const logoHeightSm = logoHeight / 1.5;
 
-  return { logoWidth, logoHeight, logoWidthSm, logoHeightSm };
+	return { logoWidth, logoHeight, logoWidthSm, logoHeightSm };
 };
 
 // Key handling
 export function useKeydown(key, callback) {
-  useEffect(() => {
-    const handler = function(event) {
-      if (event.key === key) {
-        callback();
-      }
-    };
-    document.addEventListener('keydown', handler);
-    return () => {
-      document.removeEventListener('keydown', handler);
-    };
-  }, []);
+	useEffect(() => {
+		const handler = function(event) {
+			if (event.key === key) {
+				callback();
+			}
+		};
+		document.addEventListener('keydown', handler);
+		return () => {
+			document.removeEventListener('keydown', handler);
+		};
+	}, []);
 }
 
 // Strip Tags
 export const stripTags = htmlString => {
-  return (htmlString || '').replace(/(<([^>]+)>)/gi, '');
+	return (htmlString || '').replace(/(<([^>]+)>)/gi, '');
 };

@@ -43,60 +43,79 @@ const initialData = {
 			name: 'Admin User',
 			email: 'ichenwu01@gmail.com',
 			isAdmin: true,
+			wallet: 0,
 			password: 'wuichen01'
 		},
 		{
 			name: 'Organiser 1',
 			email: 'organiser1@keystonejs.com',
 			twitterHandle: '@organiser1',
+			wallet: 0,
+
 			password
 		},
 		{
 			name: 'Organiser 2',
 			email: 'organiser2@keystonejs.com',
 			twitterHandle: '@organiser2',
+			wallet: 0,
+
 			password
 		},
 		{
 			name: 'Organiser 3',
 			email: 'organiser3@keystonejs.com',
 			twitterHandle: '@organiser3',
+			wallet: 0,
+
 			password
 		},
 		{
 			name: 'Speaker 1',
 			email: 'speaker1@keystonejs.com',
 			twitterHandle: '@speaker1',
+			wallet: 0,
+
 			password
 		},
 		{
 			name: 'Speaker 2',
 			email: 'speaker2@keystonejs.com',
 			twitterHandle: '@speaker2',
+			wallet: 0,
+
 			password
 		},
 		{
 			name: 'Speaker 3',
 			email: 'speaker3@keystonejs.com',
 			twitterHandle: '@speaker3',
+			wallet: 0,
+
 			password
 		},
 		{
 			name: 'Attendee 1',
 			email: 'attendee1@keystonejs.com',
 			twitterHandle: `@attendee1`,
+			wallet: 0,
+
 			password
 		},
 		{
 			name: 'Attendee 2',
 			email: 'attendee2@keystonejs.com',
 			twitterHandle: `@attendee2`,
+			wallet: 0,
+
 			password
 		},
 		{
 			name: 'Attendee 3',
 			email: 'attendee3@keystonejs.com',
 			twitterHandle: `@attendee3`,
+			wallet: 0,
+
 			password
 		}
 	],
@@ -115,7 +134,7 @@ const initialData = {
 			durationMins: 150,
 			maxRsvps: 120,
 			isRsvpAvailable: true,
-			rate: 200
+			rate: 10200
 		}
 	],
 	// Talk: [
