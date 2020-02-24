@@ -4,31 +4,37 @@ import { useFormState } from 'react-use-form-state';
 import { useToasts } from 'react-toast-notifications';
 import { useMutation } from 'react-apollo';
 import Navbar from '../components/Navbar';
-
+import { Query } from 'react-apollo';
+// import { useRouter, withRouter } from 'next/router';
 import { AvatarUpload } from '../components/AvatarUpload';
 import Meta from '../components/Meta';
 import { Button, Field, Group, Label, Link, Input } from '../primitives/forms';
 const onChange = handler => e => handler(e.target.value);
-// export default () => {
-// 	const { isAuthenticated, user } = useAuth();
-// 	if (isAuthenticated) {
-// 		return (
-// 			<>
-// 				<Meta title={user.name} />
-// 				<Navbar background="black" />
-// 				{/*<Profile {...this.props} />*/}
-// 				<NewProfile user={user} />
-// 			</>
-// 		);
-// 	} else {
-// 		return (
-// 			<>
-// 				<Navbar background="black" />
-// 				<h3>Please log in</h3>
-// 			</>
-// 		);
-// 	}
-// };
+// export default withRouter(({ router }) => {
+// 	return (
+// 		<Query query={USER}>
+// 			{({ data, loading, error }) => {
+// 				if (loading) {
+// 					return <div>loading</div>;
+// 				}
+// 				if (error) {
+// 					return <div>somethings wrong</div>;
+// 				}
+// 				if (data && data.authenticatedUser) {
+// 					return (
+// 						<>
+// 							<Navbar background="black" />
+// 							<NewProfile user={data.authenticatedUser} />
+// 						</>
+// 					);
+// 				} else {
+// 					router.push('/');
+// 					return null;
+// 				}
+// 			}}
+// 		</Query>
+// 	);
+// });
 
 export default class ProfilePage extends Component {
 	static async getInitialProps(ctx) {

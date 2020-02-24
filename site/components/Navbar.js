@@ -100,6 +100,7 @@ const UserActions = ({ user }) => {
 	const onSignout = event => {
 		event.preventDefault();
 		signout();
+		window.location.replace('/');
 	};
 
 	return (
