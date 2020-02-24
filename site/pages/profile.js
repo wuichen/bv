@@ -10,65 +10,65 @@ import { AvatarUpload } from '../components/AvatarUpload';
 import Meta from '../components/Meta';
 import { Button, Field, Group, Label, Link, Input } from '../primitives/forms';
 const onChange = handler => e => handler(e.target.value);
-// export default withRouter(({ router }) => {
-// 	return (
-// 		<Query query={USER}>
-// 			{({ data, loading, error }) => {
-// 				if (loading) {
-// 					return <div>loading</div>;
-// 				}
-// 				if (error) {
-// 					return <div>somethings wrong</div>;
-// 				}
-// 				if (data && data.authenticatedUser) {
-// 					return (
-// 						<>
-// 							<Navbar background="black" />
-// 							<NewProfile user={data.authenticatedUser} />
-// 						</>
-// 					);
-// 				} else {
-// 					router.push('/');
-// 					return null;
-// 				}
-// 			}}
-// 		</Query>
-// 	);
-// });
+export default () => {
+	return (
+		<Query query={USER}>
+			{({ data, loading, error }) => {
+				if (loading) {
+					return <div>loading</div>;
+				}
+				if (error) {
+					return <div>somethings wrong</div>;
+				}
+				if (data && data.authenticatedUser) {
+					return (
+						<>
+							<Navbar background="black" />
+							<NewProfile user={data.authenticatedUser} />
+						</>
+					);
+				} else {
+					window.location.replace('/');
+					return null;
+				}
+			}}
+		</Query>
+	);
+};
 
-export default class ProfilePage extends Component {
-	static async getInitialProps(ctx) {
-		try {
-			const { data, error } = await ctx.apolloClient.query({
-				query: USER
-			});
-			// Redirect to the Signin page when the user is not logged in or if there is an error.
-			if (!data.authenticatedUser || error) {
-				ctx.res.redirect('/signin');
-			}
+// export default class ProfilePage extends Component {
+// 	static async getInitialProps(ctx) {
+// 		try {
+// 			const { data, error } = await ctx.apolloClient.query({
+// 				query: USER
+// 			});
+// 			// Redirect to the Signin page when the user is not logged in or if there is an error.
+// 			if (!data.authenticatedUser || error) {
+// 				ctx.res.redirect('/signin');
+// 			}
 
-			return {
-				user: data.authenticatedUser,
-				error: error
-			};
-		} catch (error) {
-			// If there was an error, we need to pass it down so the page can handle it.
-			return { error };
-		}
-	}
+// 			return {
+// 				user: data.authenticatedUser,
+// 				error: error
+// 			};
+// 		} catch (error) {
+// 			// If there was an error, we need to pass it down so the page can handle it.
+// 			return { error };
+// 		}
+// 	}
 
-	render() {
-		if (this.props.error) return <h1>Error loading User Profile.</h1>;
-		return (
-			<>
-				<Meta title={this.props.user.name} />
-				<Navbar background="black" />
-				{/*<Profile {...this.props} />*/}
-				<NewProfile {...this.props} />
-			</>
-		);
-	}
-}
+// 	render() {
+// 		if (this.props.error) return <h1>Error loading User Profile.</h1>;
+// 		return (
+// 			<>
+// 				<Meta title={this.props.user.name} />
+// 				<Navbar background="black" />
+// 				{/*<Profile {...this.props} />*/}
+// 				<NewProfile {...this.props} />
+// 			</>
+// 		);
+// 	}
+// }
 
 const NewProfile = ({ user }) => {
 	const [email, setEmail] = useState(user.email);
