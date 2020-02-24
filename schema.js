@@ -36,16 +36,16 @@ const DEFAULT_LIST_ACCESS = {
 };
 
 exports.User = {
-	access: {
-		update: access.userIsCurrentAuth,
-		delete: access.userIsAdmin
-	},
+	// access: {
+	// 	update: access.userIsCurrentAuth,
+	// 	delete: access.userIsAdmin
+	// },
 	fields: {
 		name: { type: Text },
 		email: {
 			type: Text,
-			isUnique: true,
-			access: { read: access.userIsCurrentAuth }
+			isUnique: true
+			// access: { read: access.userIsCurrentAuth }
 		},
 		password: { type: Password, isRequired: true },
 		isAdmin: { type: Checkbox, access: { update: access.userIsAdmin } },
@@ -54,8 +54,8 @@ exports.User = {
 		talks: {
 			type: Relationship,
 			ref: 'Talk.speakers',
-			many: true,
-			access: { update: access.userIsAdmin }
+			many: true
+			// access: { update: access.userIsAdmin }
 		},
 		events: {
 			type: Relationship,
@@ -67,8 +67,14 @@ exports.User = {
 			ref: 'Room.user',
 			many: true
 		},
+		rsvps: {
+			type: Relationship,
+			ref: 'Rsvp.user',
+			many: true
+		},
 		wallet: {
-			type: Integer
+			type: Integer,
+			defaultValue: 0
 		}
 	},
 	hooks: {
@@ -96,7 +102,7 @@ exports.User = {
 };
 
 exports.Organiser = {
-	access: DEFAULT_LIST_ACCESS,
+	// access: DEFAULT_LIST_ACCESS,
 	fields: {
 		user: { type: Relationship, ref: 'User' },
 		order: { type: Integer },
@@ -109,9 +115,10 @@ exports.Organiser = {
 // read: ({ existingItem, authentication }) => access.userIsAdmin({ authentication }) || !!(existingItem && existingItem.status === 'active'),
 
 exports.Event = {
-	access: DEFAULT_LIST_ACCESS,
+	// access: DEFAULT_LIST_ACCESS,
 	fields: {
 		name: { type: Text },
+		rate: { type: Integer },
 		status: { type: Select, options: 'draft, active', defaultValue: 'draft' },
 		themeColor: { type: Text },
 		startTime: { type: DateTime },
@@ -126,6 +133,11 @@ exports.Event = {
 			type: Relationship,
 			ref: 'User.events'
 		},
+		rsvps: {
+			type: Relationship,
+			ref: 'Rsvp.event',
+			many: true
+		},
 		room: {
 			type: Relationship,
 			ref: 'Room.events'
@@ -134,7 +146,7 @@ exports.Event = {
 };
 
 exports.Room = {
-	access: DEFAULT_LIST_ACCESS,
+	// access: DEFAULT_LIST_ACCESS,
 	fields: {
 		name: { type: Text },
 		events: { type: Relationship, ref: 'Event.room', many: true },
@@ -146,7 +158,7 @@ exports.Room = {
 };
 
 exports.Talk = {
-	access: DEFAULT_LIST_ACCESS,
+	// access: DEFAULT_LIST_ACCESS,
 	fields: {
 		name: { type: Text },
 		event: { type: Relationship, ref: 'Event.talks' },
@@ -157,27 +169,47 @@ exports.Talk = {
 };
 
 exports.Rsvp = {
-	access: {
-		create: true,
-		read: true,
-		update: ({ authentication: { item } }) => {
-			if (!item) {
-				return false;
-			}
-			return { user: { id: item.id } };
-		},
-		delete: access.userIsAdmin
-	},
+	// access: {
+	// 	create: true,
+	// 	read: true,
+	// 	update: ({ authentication: { item } }) => {
+	// 		if (!item) {
+	// 			return false;
+	// 		}
+	// 		return { user: { id: item.id } };
+	// 	},
+	// 	delete: access.userIsAdmin
+	// },
 	fields: {
-		event: { type: Relationship, ref: 'Event' },
-		user: { type: Relationship, ref: 'User' },
+		event: { type: Relationship, ref: 'Event.rsvps' },
+		user: { type: Relationship, ref: 'User.rsvps' },
 		status: { type: Select, options: 'yes, no' },
 		paid: { type: Select, options: 'yes, no' },
+		amount: { type: Integer },
+		rate: { type: Integer },
 		numberOfGuests: { type: Integer },
 		startTime: { type: DateTime },
 		endTime: { type: DateTime }
 	},
 	hooks: {
+		// afterChange: async ({ resolvedData, existingItem, actions }) => {
+		// 	if (resolvedData.amount && !existingItem.amount) {
+		// 		const { data } = await actions.query(`
+		//         mutation updateUser(
+		//           $userId: ID!,
+		//           $amount: Int!,
+		//         ) {
+		//           updateUser(id: $userId,data: {
+		//             wallet: amount
+		//           }) {
+		//             id
+		//             wallet
+		//           }
+		//         }
+		//       `, {variables: {
+		//       }});
+		// 	}
+		// },
 		validateInput: async ({ resolvedData, existingItem, actions }) => {
 			const { status } = resolvedData;
 			const { event: eventId } = existingItem ? existingItem : resolvedData;
@@ -200,21 +232,22 @@ exports.Rsvp = {
 
 			const { event, allRsvps } = data;
 
-			if (
-				!event ||
-				!event.isRsvpAvailable ||
-				!event.startTime ||
-				new Date() > new Date(event.startTime) ||
-				allRsvps.length >= event.maxRsvps
-			) {
-				throw 'Error rsvping to event';
-			}
+			// TODO: change this check to looking for event.endTime exists
+			// if (
+			// 	!event ||
+			// 	!event.isRsvpAvailable ||
+			// 	!event.startTime ||
+			// 	new Date() > new Date(event.startTime) ||
+			// 	allRsvps.length >= event.maxRsvps
+			// ) {
+			// 	throw 'Error rsvping to event';
+			// }
 		}
 	}
 };
 
 exports.Sponsor = {
-	access: DEFAULT_LIST_ACCESS,
+	// access: DEFAULT_LIST_ACCESS,
 	fields: {
 		name: { type: Text },
 		website: { type: Text },
@@ -223,12 +256,12 @@ exports.Sponsor = {
 };
 
 exports.ForgottenPasswordToken = {
-	access: {
-		create: true,
-		read: true,
-		update: access.userIsAdmin,
-		delete: access.userIsAdmin
-	},
+	// access: {
+	// 	create: true,
+	// 	read: true,
+	// 	update: access.userIsAdmin,
+	// 	delete: access.userIsAdmin
+	// },
 	fields: {
 		user: {
 			type: Relationship,

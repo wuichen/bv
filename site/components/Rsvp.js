@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { Mutation, Query } from 'react-apollo';
 import { jsx } from '@emotion/core';
-
+import gql from 'graphql-tag';
 import {
 	Button as ButtonPrimitive,
 	CheckmarkIcon,
@@ -9,54 +9,71 @@ import {
 } from '../primitives';
 import { useAuth } from '../lib/authentication';
 import { GET_RSVPS, UPDATE_RSVP, ADD_RSVP } from '../graphql/rsvps';
+
 import AuthModal from './auth/modal';
+import { Input } from '../primitives/forms';
+import { useState, useEffect } from 'react';
+import { useQuery, useMutation } from 'react-apollo';
+import { GET_EVENT_RSVPS } from '../graphql/rsvps';
 
 function validateRsvp({ userRsvps, eventRsvps, event }) {
 	if (!event || !event.isRsvpAvailable) {
-		return { okay: false, message: null }; // RSVP is not available
+		return {
+			okay: false,
+			message: null
+		}; // RSVP is not available
 	}
 
-	if (new Date() > new Date(event.startTime)) {
-		return { okay: false, message: null }; // This event is in the past.
-	}
+	// TODO: change this check to looking for event.endTime exists
+	// if (new Date() > new Date(event.startTime)) {
+	// 	return { okay: false, message: null }; // This event is in the past.
+	// }
 
 	if (
 		event.maxRsvps !== null &&
 		eventRsvps.length >= event.maxRsvps &&
 		!userRsvps.length
 	) {
-		return { okay: false, message: 'Max attendees reached.' };
+		return {
+			okay: false,
+			message: 'Max attendees reached.'
+		};
 	}
 
 	return { okay: true };
 }
 
 const Rsvp = ({ children, event, text, themeColor }) => {
+	const { data, error, loading } = useQuery(GET_EVENT_RSVPS, {
+		variables: {
+			event: event.id
+		}
+	});
+
 	const { isAuthenticated, isLoading, user } = useAuth();
 	const eventId = event.id;
-	const isPast = new Date() > new Date(event.startTime);
-
+	// TODO: change this check to looking for event.endTime exists
+	// const isPast = new Date() > new Date(event.startTime);
+	const [numberOfGuests, setNumberOfGuests] = useState(1);
 	if (isLoading) {
 		return null;
 	}
 
 	if (!isAuthenticated) {
-		return isPast
-			? null
-			: children({
-					component: (
-						<AuthModal mode="signin">
-							{({ openModal }) => (
-								<ButtonWrapper>
-									<span css={{ marginRight: '0.5em', flex: 1 }}>{text}</span>
-									<Button href="/signin" onClick={openModal}>
-										Sign In
-									</Button>
-								</ButtonWrapper>
-							)}
-						</AuthModal>
-					)
-			  });
+		return children({
+			component: (
+				<AuthModal mode="signin">
+					{({ openModal }) => (
+						<ButtonWrapper>
+							<span css={{ marginRight: '0.5em', flex: 1 }}>{text}</span>
+							<Button href="/signin" onClick={openModal}>
+								Sign In
+							</Button>
+						</ButtonWrapper>
+					)}
+				</AuthModal>
+			)
+		});
 	}
 
 	return (
@@ -117,12 +134,9 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 										rsvp: hasResponded ? userResponse.id : null,
 										event: eventId,
 										user: user.id,
+										numberOfGuests,
 										startTime:
-											status === 'yes'
-												? new Date(
-														Date.now() + 1000 * 60 * 60 * 24 * 30
-												  ).toISOString()
-												: null,
+											status === 'yes' ? new Date().toISOString() : null,
 										status
 									}
 								});
@@ -132,7 +146,7 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 							const isGoing = hasResponded
 								? userResponse.status === 'yes'
 								: false;
-							console.log(userResponse);
+							const thisMoment = new Date();
 							return children({
 								component: (
 									<ButtonWrapper>
@@ -142,39 +156,67 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 												disabled={mutationLoading || !!userResponse.endTime}
 												isSelected={!!userResponse.endTime}
 												background={themeColor}
-												onClick={() => {
-													updateRsvp({
-														variables: {
-															rsvp: userResponse.id,
-															user: user.id,
-															status: userResponse.status,
-															endTime: new Date(
-																Date.now() + 1000 * 60 * 60 * 24 * 30
-															).toISOString()
-														}
-													});
+												onClick={async () => {
+													try {
+														const amount = Math.round(
+															(((thisMoment.getTime() -
+																new Date(userRsvps[0].startTime).getTime()) /
+																60000) *
+																(event.rate / 60)) /
+																eventRsvps.length
+														);
+														console.log(amount, thisMoment, userRsvps);
+														await updateRsvp({
+															variables: {
+																rsvp: userResponse.id,
+																user: user.id,
+																status: userResponse.status,
+																amount,
+																endTime: thisMoment.toISOString()
+															}
+														});
+													} catch (err) {
+														console.log(err);
+													}
 												}}
 											>
 												Check out
 											</Button>
 										) : (
 											<>
+												<select
+													defaultValue={numberOfGuests}
+													onChange={e => {
+														setNumberOfGuests(e.target.value);
+													}}
+													style={{
+														border: 'none',
+														marginRight: '40px',
+														height: '40px',
+														width: '40px'
+													}}
+												>
+													<option value={1}>1</option>
+													<option value={2}>2</option>
+													<option value={3}>3</option>
+													<option value={4}>4</option>
+												</select>
 												<Button
 													disabled={mutationLoading || isGoing}
 													isSelected={hasResponded && isGoing}
 													background={themeColor}
 													onClick={respondYes}
 												>
-													Yes
+													Check In
 												</Button>
-												<Button
+												{/*<Button
 													disabled={mutationLoading || !isGoing}
 													isSelected={hasResponded && !isGoing}
 													background={themeColor}
 													onClick={respondNo}
 												>
 													No
-												</Button>
+                        </Button>*/}
 											</>
 										)}
 									</ButtonWrapper>
@@ -190,7 +232,7 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 
 Rsvp.defaultProps = {
 	children: () => null,
-	text: 'Are you going?'
+	text: 'How many guests'
 };
 
 const ButtonWrapper = props => (
@@ -223,5 +265,16 @@ const Button = ({ background, children, isSelected, ...props }) => (
 		{children}
 	</ButtonPrimitive>
 );
+
+const UPDATE_USER = gql`
+	mutation UpdateUser($userId: ID!, $wallet: Int!) {
+		updateUser(id: $userId, data: { wallet: $wallet }) {
+			id
+			name
+			email
+			wallet
+		}
+	}
+`;
 
 export default Rsvp;

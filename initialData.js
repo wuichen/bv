@@ -107,14 +107,15 @@ const initialData = {
 	// ],
 	Event: [
 		{
-			name: 'Keystone Launch',
+			name: '麻將',
 			status: 'active',
 			themeColor: '#334455',
 			// Default to "1 month from now"
-			startTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toISOString(),
+			startTime: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
 			durationMins: 150,
 			maxRsvps: 120,
-			isRsvpAvailable: true
+			isRsvpAvailable: true,
+			rate: 200
 		}
 	],
 	// Talk: [

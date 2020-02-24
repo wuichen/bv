@@ -56,22 +56,7 @@ const NewProfile = ({ user }) => {
 	const [errorState, setErrorState] = useState(false);
 	const [validationErrors, setValidationErrors] = useState({});
 	const [updateUser] = useMutation(UPDATE_USER);
-
-	// const handleSubmit = async event => {
-	// 	event.preventDefault();
-
-	// 	setIsLoading(true);
-	// 	try {
-	// 		// await signin({ email, password });
-	// 		setIsLoading(false);
-	// 		setErrorState(false);
-	// 		if (onSuccess && typeof onSuccess === 'function') {
-	// 			onSuccess();
-	// 		}
-	// 	} catch (error) {
-	// 		setErrorState(true);
-	// 	}
-	// };
+	const [tab, setTab] = useState('info');
 
 	const handleSubmit = useCallback(
 		async event => {
@@ -123,43 +108,80 @@ const NewProfile = ({ user }) => {
 				marginRight: 'auto'
 			}}
 		>
-			{errorState && (
-				<p css={{ color: colors.red }}>
-					Please check your email and password then try again.
-				</p>
+			<div style={{ marginBottom: '40px' }}>
+				<Button onClick={() => setTab('info')}>Info</Button> &nbsp;
+				<Button onClick={() => setTab('booking')}>Booking</Button>
+			</div>
+			{tab === 'booking' && (
+				<>
+					{user.rsvps.length === 0 && 'No bookings'}
+					{user.rsvps.map(rsvp => {
+						return (
+							<div
+								style={{
+									padding: '20px',
+									boxShadow: '0px 4px 10px rgba(0,0,0,0.1)',
+									display: 'flex',
+									justifyContent: 'space-between',
+									alignItems: 'center'
+								}}
+							>
+								<div>
+									<h4>
+										{new Date(rsvp.startTime).getFullYear()}/
+										{new Date(rsvp.startTime).getMonth()}/
+										{new Date(rsvp.startTime).getDate()}
+									</h4>
+									<div>{rsvp.event.name}</div>
+								</div>
+								<div>
+									<h4>Paid: {rsvp.paid ? 'Paid' : 'Not Yet'}</h4>
+									<div>Amount: {rsvp.amount}</div>
+								</div>
+							</div>
+						);
+					})}
+				</>
 			)}
-			<AvatarUpload userId={user.id} size="xlarge" />
+			{tab === 'info' && (
+				<>
+					{errorState && (
+						<p css={{ color: colors.red }}>
+							Please check your email and password then try again.
+						</p>
+					)}
+					<AvatarUpload userId={user.id} size="xlarge" />
 
-			<form noValidate onSubmit={handleSubmit}>
-				<Field>
-					<Label htmlFor="name">Name</Label>
-					<Input
-						autoComplete="name"
-						autoFocus
-						disabled={isLoading}
-						onChange={onChange(setName)}
-						placeholder="your name"
-						required
-						type="text"
-						value={name}
-						id="name"
-					/>
-				</Field>
-				<Field>
-					<Label htmlFor="email">Email</Label>
-					<Input
-						autoComplete="email"
-						autoFocus
-						disabled={isLoading}
-						onChange={onChange(setEmail)}
-						placeholder="you@awesome.com"
-						required
-						type="text"
-						value={email}
-						id="email"
-					/>
-				</Field>
-				{/*<Field>
+					<form noValidate onSubmit={handleSubmit}>
+						<Field>
+							<Label htmlFor="name">Name</Label>
+							<Input
+								autoComplete="name"
+								autoFocus
+								disabled={isLoading}
+								onChange={onChange(setName)}
+								placeholder="your name"
+								required
+								type="text"
+								value={name}
+								id="name"
+							/>
+						</Field>
+						<Field>
+							<Label htmlFor="email">Email</Label>
+							<Input
+								autoComplete="email"
+								autoFocus
+								disabled={isLoading}
+								onChange={onChange(setEmail)}
+								placeholder="you@awesome.com"
+								required
+								type="text"
+								value={email}
+								id="email"
+							/>
+						</Field>
+						{/*<Field>
 					<Label htmlFor="password">Password</Label>
 					<Input
 						autoComplete="password"
@@ -187,10 +209,12 @@ const NewProfile = ({ user }) => {
 						value={confirmPassword}
 					/>
         </Field>*/}
-				<Button disabled={isLoading} type="submit">
-					{isLoading ? 'Saving...' : 'Save Changes'}
-				</Button>
-			</form>
+						<Button disabled={isLoading} type="submit">
+							{isLoading ? 'Saving...' : 'Save Changes'}
+						</Button>
+					</form>
+				</>
+			)}
 		</div>
 	);
 };
@@ -327,6 +351,16 @@ const USER = gql`
 			name
 			email
 			twitterHandle
+			rsvps {
+				id
+				paid
+				startTime
+				endTime
+				amount
+				event {
+					name
+				}
+			}
 			image {
 				publicUrlTransformed(
 					transformation: {

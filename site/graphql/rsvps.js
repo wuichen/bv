@@ -7,6 +7,7 @@ export const ADD_RSVP = gql`
 		$user: ID!
 		$status: RsvpStatusType!
 		$startTime: DateTime!
+		$numberOfGuests: Int!
 	) {
 		createRsvp(
 			data: {
@@ -14,6 +15,7 @@ export const ADD_RSVP = gql`
 				user: { connect: { id: $user } }
 				status: $status
 				startTime: $startTime
+				numberOfGuests: $numberOfGuests
 			}
 		) {
 			id
@@ -30,8 +32,12 @@ export const UPDATE_RSVP = gql`
 		$rsvp: ID!
 		$status: RsvpStatusType!
 		$endTime: DateTime!
+		$amount: Int
 	) {
-		updateRsvp(id: $rsvp, data: { status: $status, endTime: $endTime }) {
+		updateRsvp(
+			id: $rsvp
+			data: { amount: $amount, status: $status, endTime: $endTime }
+		) {
 			id
 			event {
 				id
@@ -78,6 +84,7 @@ export const GET_RSVPS = gql`
 			startTime
 			maxRsvps
 			isRsvpAvailable
+			rate
 		}
 	}
 `;
