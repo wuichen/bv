@@ -1,5 +1,7 @@
 import React, { Component, useState, useCallback } from 'react';
 import gql from 'graphql-tag';
+import { jsx, css } from '@emotion/core';
+
 import { useFormState } from 'react-use-form-state';
 import { useToasts } from 'react-toast-notifications';
 import { useMutation } from 'react-apollo';
@@ -85,6 +87,13 @@ const NewProfile = ({ user }) => {
 			style={{
 				padding: '30px'
 			}}
+			css={css`
+				@media (min-width: 700px) {
+					width: 500px;
+					margin-left: auto;
+					margin-right: auto;
+				}
+			`}
 		>
 			<div style={{ marginBottom: '40px' }}>
 				<Button

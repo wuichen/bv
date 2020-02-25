@@ -81,7 +81,6 @@ const ProfileInfo = ({ user }) => {
 					<Label htmlFor="name">姓名</Label>
 					<Input
 						autoComplete="name"
-						autoFocus
 						disabled={isLoading}
 						onChange={onChange(setName)}
 						placeholder="your name"
@@ -95,7 +94,6 @@ const ProfileInfo = ({ user }) => {
 					<Label htmlFor="email">Email</Label>
 					<Input
 						autoComplete="email"
-						autoFocus
 						disabled={isLoading}
 						onChange={onChange(setEmail)}
 						placeholder="you@awesome.com"

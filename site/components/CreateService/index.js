@@ -85,7 +85,6 @@ const CreateService = ({ user, setTab }) => {
 					<Label htmlFor="name">服務名稱</Label>
 					<Input
 						autoComplete="name"
-						autoFocus
 						disabled={isLoading}
 						onChange={onChange(setName)}
 						placeholder="service name"
@@ -99,7 +98,6 @@ const CreateService = ({ user, setTab }) => {
 					<Label htmlFor="address">服務地址</Label>
 					<Input
 						autoComplete="address"
-						autoFocus
 						disabled={isLoading}
 						onChange={onChange(setAddress)}
 						placeholder="Taipei yong kang"
