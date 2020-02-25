@@ -1,6 +1,5 @@
 import React, { Component, useState, useCallback } from 'react';
 import gql from 'graphql-tag';
-import { jsx, css } from '@emotion/core';
 
 import { useFormState } from 'react-use-form-state';
 import { useToasts } from 'react-toast-notifications';
@@ -15,6 +14,10 @@ import Services from '../components/Services';
 import ProfileInfo from '../components/ProfileInfo';
 import { USER } from '../graphql/users';
 import { Button, Field, Group, Label, Link, Input } from '../primitives/forms';
+import { Container } from '../primitives';
+import { jsx } from '@emotion/core';
+import { mq } from '../helpers/media';
+
 export default () => {
 	return (
 		<>
@@ -83,17 +86,12 @@ const NewProfile = ({ user }) => {
 	const selectedStyle = { backgroundColor: 'black', color: 'white' };
 
 	return (
-		<div
-			style={{
-				padding: '30px'
-			}}
-			css={css`
-				@media (min-width: 700px) {
-					width: 500px;
-					margin-left: auto;
-					margin-right: auto;
-				}
-			`}
+		<Container
+			css={mq({
+				padding: '30px',
+				width: ['350px', '600px'],
+				margin: 'auto'
+			})}
 		>
 			<div style={{ marginBottom: '40px' }}>
 				<Button
@@ -124,7 +122,7 @@ const NewProfile = ({ user }) => {
 			{tab === 'createService' && <CreateService user={user} setTab={setTab} />}
 			{tab === 'service' && <Services setTab={setTab} user={user} />}
 			{tab === 'info' && <ProfileInfo user={user} />}
-		</div>
+		</Container>
 	);
 };
 
