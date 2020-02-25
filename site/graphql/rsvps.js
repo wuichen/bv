@@ -76,11 +76,6 @@ export const GET_RSVPS = gql`
 			startTime
 			endTime
 			numberOfGuests
-			service {
-				id
-				rate
-				name
-			}
 		}
 		userRsvps: allRsvps(where: { event: { id: $event }, user: { id: $user } }) {
 			id
@@ -88,11 +83,6 @@ export const GET_RSVPS = gql`
 			startTime
 			endTime
 			numberOfGuests
-			service {
-				id
-				rate
-				name
-			}
 		}
 		event: Event(where: { id: $event }) {
 			id
