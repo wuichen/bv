@@ -24,8 +24,7 @@ const initialiseData = require('./initialData');
 const keystone = new Keystone({
 	name: MEETUP.name,
 	adapter: new MongooseAdapter({
-		mongoUri:
-			'mongodb+srv://admin:admin@cluster0-covhk.mongodb.net/test?retryWrites=true&w=majority'
+		mongoUri: process.env.MONGO_URI
 	}),
 	onConnect: initialiseData
 });
