@@ -13,7 +13,7 @@ const {
 	User,
 	Rsvp,
 	Organiser,
-	Room,
+	Service,
 	Sponsor,
 	ForgottenPasswordToken
 } = require('./schema');
@@ -33,7 +33,7 @@ const authStrategy = keystone.createAuthStrategy({
 });
 
 keystone.createList('Event', Event);
-keystone.createList('Room', Room);
+keystone.createList('Service', Service);
 keystone.createList('Rsvp', Rsvp);
 keystone.createList('Talk', Talk);
 keystone.createList('User', User);

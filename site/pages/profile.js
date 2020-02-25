@@ -6,10 +6,13 @@ import { useMutation } from 'react-apollo';
 import Navbar from '../components/Navbar';
 import { Query } from 'react-apollo';
 // import { useRouter, withRouter } from 'next/router';
-import { AvatarUpload } from '../components/AvatarUpload';
 import Meta from '../components/Meta';
+import Bookings from '../components/Bookings';
+import CreateService from '../components/CreateService';
+import Services from '../components/Services';
+import ProfileInfo from '../components/ProfileInfo';
+import { USER } from '../graphql/users';
 import { Button, Field, Group, Label, Link, Input } from '../primitives/forms';
-const onChange = handler => e => handler(e.target.value);
 export default () => {
 	return (
 		<Query query={USER}>
@@ -18,6 +21,7 @@ export default () => {
 					return <div>loading</div>;
 				}
 				if (error) {
+					console.log(error);
 					return <div>somethings wrong</div>;
 				}
 				if (data && data.authenticatedUser) {
@@ -28,7 +32,9 @@ export default () => {
 						</>
 					);
 				} else {
-					window.location.replace('/');
+					if (typeof window !== 'undefined') {
+						window.location.replace('/');
+					}
 					return null;
 				}
 			}}
@@ -71,59 +77,7 @@ export default () => {
 // }
 
 const NewProfile = ({ user }) => {
-	const [email, setEmail] = useState(user.email);
-	const [name, setName] = useState(user.name);
-
-	const [password, setPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
-	const { addToast } = useToasts();
-
-	const [isLoading, setIsLoading] = useState(false);
-	const [errorState, setErrorState] = useState(false);
-	const [validationErrors, setValidationErrors] = useState({});
-	const [updateUser] = useMutation(UPDATE_USER);
 	const [tab, setTab] = useState('info');
-
-	const handleSubmit = useCallback(
-		async event => {
-			event.preventDefault();
-			if (password !== confirmPassword) {
-				console.log(password, confirmPassword);
-				setValidationErrors({ password: 'Your password should match.' });
-				return null;
-			}
-			setIsLoading(true);
-
-			try {
-				await updateUser({
-					variables: {
-						userId: user.id,
-						email,
-						name,
-						password
-					}
-				});
-				addToast('Changes saved successfully.', {
-					appearance: 'success',
-					autoDismiss: true
-				});
-			} catch (error) {
-				const errorMessage = error.message.replace(
-					'GraphQL error: [password:minLength:User:password] ',
-					''
-				);
-				setValidationErrors({ password: `${errorMessage}` });
-
-				addToast('Please try again.', {
-					appearance: 'error',
-					autoDismiss: true
-				});
-			}
-
-			setIsLoading(false);
-		},
-		[name, email, password, confirmPassword]
-	);
 
 	const unSelectedStyle = { backgroundColor: 'white', color: 'black' };
 	const selectedStyle = { backgroundColor: 'black', color: 'white' };
@@ -142,120 +96,30 @@ const NewProfile = ({ user }) => {
 					style={tab === 'info' ? selectedStyle : unSelectedStyle}
 					onClick={() => setTab('info')}
 				>
-					Info
-				</Button>{' '}
+					基本資料
+				</Button>
 				&nbsp;
 				<Button
 					style={tab === 'booking' ? selectedStyle : unSelectedStyle}
 					onClick={() => setTab('booking')}
 				>
-					Booking
+					使用紀錄
+				</Button>
+				<Button
+					style={
+						tab === 'service' || tab === 'createService'
+							? selectedStyle
+							: unSelectedStyle
+					}
+					onClick={() => setTab('service')}
+				>
+					我的服務
 				</Button>
 			</div>
-			{tab === 'booking' && (
-				<>
-					{user.rsvps.length === 0 && 'No bookings'}
-					{user.rsvps.map(rsvp => {
-						return (
-							<div
-								style={{
-									padding: '20px',
-									boxShadow: '0px 4px 10px rgba(0,0,0,0.1)',
-									display: 'flex',
-									justifyContent: 'space-between',
-									alignItems: 'center'
-								}}
-							>
-								<div>
-									<h4>
-										{new Date(rsvp.startTime).getFullYear()}/
-										{new Date(rsvp.startTime).getMonth()}/
-										{new Date(rsvp.startTime).getDate()}
-									</h4>
-									<div>{rsvp.event.name}</div>
-								</div>
-								<div>
-									<h4>Paid: {rsvp.paid ? 'Paid' : 'Not Yet'}</h4>
-									<div>Amount: {rsvp.amount}</div>
-								</div>
-							</div>
-						);
-					})}
-				</>
-			)}
-			{tab === 'info' && (
-				<>
-					{errorState && (
-						<p css={{ color: colors.red }}>
-							Please check your email and password then try again.
-						</p>
-					)}
-					<AvatarUpload userId={user.id} size="xlarge" />
-					<h3>Wallet: {user.wallet}</h3>
-
-					<form noValidate onSubmit={handleSubmit}>
-						<Field>
-							<Label htmlFor="name">Name</Label>
-							<Input
-								autoComplete="name"
-								autoFocus
-								disabled={isLoading}
-								onChange={onChange(setName)}
-								placeholder="your name"
-								required
-								type="text"
-								value={name}
-								id="name"
-							/>
-						</Field>
-						<Field>
-							<Label htmlFor="email">Email</Label>
-							<Input
-								autoComplete="email"
-								autoFocus
-								disabled={isLoading}
-								onChange={onChange(setEmail)}
-								placeholder="you@awesome.com"
-								required
-								type="text"
-								value={email}
-								id="email"
-							/>
-						</Field>
-						{/*<Field>
-					<Label htmlFor="password">Password</Label>
-					<Input
-						autoComplete="password"
-						disabled={isLoading}
-						id="password"
-						minLength="8"
-						onChange={onChange(setPassword)}
-						placeholder="supersecret"
-						required
-						type="password"
-						value={password}
-					/>
-				</Field>
-				<Field>
-					<Label htmlFor="confirmPassword">Confirm Password</Label>
-					<Input
-						autoComplete="confirmPassword"
-						disabled={isLoading}
-						id="confirmPassword"
-						minLength="8"
-						onChange={onChange(setConfirmPassword)}
-						placeholder="supersecret"
-						required
-						type="password"
-						value={confirmPassword}
-					/>
-        </Field>*/}
-						<Button disabled={isLoading} type="submit">
-							{isLoading ? 'Saving...' : 'Save Changes'}
-						</Button>
-					</form>
-				</>
-			)}
+			{tab === 'booking' && <Bookings user={user} />}
+			{tab === 'createService' && <CreateService user={user} setTab={setTab} />}
+			{tab === 'service' && <Services setTab={setTab} user={user} />}
+			{tab === 'info' && <ProfileInfo user={user} />}
 		</div>
 	);
 };
@@ -384,62 +248,3 @@ const Profile = ({ user }) => {
 		</div>
 	);
 };
-
-const USER = gql`
-	query user {
-		authenticatedUser {
-			id
-			name
-			email
-			twitterHandle
-			wallet
-			rsvps {
-				id
-				paid
-				startTime
-				endTime
-				amount
-				event {
-					name
-				}
-			}
-			image {
-				publicUrlTransformed(
-					transformation: {
-						quality: "40"
-						width: "90"
-						height: "90"
-						crop: "thumb"
-						page: "1"
-					}
-				)
-			}
-		}
-	}
-`;
-
-const UPDATE_USER = gql`
-	mutation UpdateUser(
-		$userId: ID!
-		$name: String
-		$email: String
-		$twitterHandle: String
-		$password: String
-	) {
-		updateUser(
-			id: $userId
-			data: {
-				name: $name
-				email: $email
-				twitterHandle: $twitterHandle
-				password: $password
-			}
-		) {
-			id
-			wallet
-			name
-			email
-			twitterHandle
-		}
-	}
-`;

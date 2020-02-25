@@ -45,79 +45,79 @@ const initialData = {
 			isAdmin: true,
 			wallet: 0,
 			password: 'wuichen01'
-		},
-		{
-			name: 'Organiser 1',
-			email: 'organiser1@keystonejs.com',
-			twitterHandle: '@organiser1',
-			wallet: 0,
-
-			password
-		},
-		{
-			name: 'Organiser 2',
-			email: 'organiser2@keystonejs.com',
-			twitterHandle: '@organiser2',
-			wallet: 0,
-
-			password
-		},
-		{
-			name: 'Organiser 3',
-			email: 'organiser3@keystonejs.com',
-			twitterHandle: '@organiser3',
-			wallet: 0,
-
-			password
-		},
-		{
-			name: 'Speaker 1',
-			email: 'speaker1@keystonejs.com',
-			twitterHandle: '@speaker1',
-			wallet: 0,
-
-			password
-		},
-		{
-			name: 'Speaker 2',
-			email: 'speaker2@keystonejs.com',
-			twitterHandle: '@speaker2',
-			wallet: 0,
-
-			password
-		},
-		{
-			name: 'Speaker 3',
-			email: 'speaker3@keystonejs.com',
-			twitterHandle: '@speaker3',
-			wallet: 0,
-
-			password
-		},
-		{
-			name: 'Attendee 1',
-			email: 'attendee1@keystonejs.com',
-			twitterHandle: `@attendee1`,
-			wallet: 0,
-
-			password
-		},
-		{
-			name: 'Attendee 2',
-			email: 'attendee2@keystonejs.com',
-			twitterHandle: `@attendee2`,
-			wallet: 0,
-
-			password
-		},
-		{
-			name: 'Attendee 3',
-			email: 'attendee3@keystonejs.com',
-			twitterHandle: `@attendee3`,
-			wallet: 0,
-
-			password
 		}
+		// {
+		// 	name: 'Organiser 1',
+		// 	email: 'organiser1@keystonejs.com',
+		// 	twitterHandle: '@organiser1',
+		// 	wallet: 0,
+
+		// 	password
+		// },
+		// {
+		// 	name: 'Organiser 2',
+		// 	email: 'organiser2@keystonejs.com',
+		// 	twitterHandle: '@organiser2',
+		// 	wallet: 0,
+
+		// 	password
+		// },
+		// {
+		// 	name: 'Organiser 3',
+		// 	email: 'organiser3@keystonejs.com',
+		// 	twitterHandle: '@organiser3',
+		// 	wallet: 0,
+
+		// 	password
+		// },
+		// {
+		// 	name: 'Speaker 1',
+		// 	email: 'speaker1@keystonejs.com',
+		// 	twitterHandle: '@speaker1',
+		// 	wallet: 0,
+
+		// 	password
+		// },
+		// {
+		// 	name: 'Speaker 2',
+		// 	email: 'speaker2@keystonejs.com',
+		// 	twitterHandle: '@speaker2',
+		// 	wallet: 0,
+
+		// 	password
+		// },
+		// {
+		// 	name: 'Speaker 3',
+		// 	email: 'speaker3@keystonejs.com',
+		// 	twitterHandle: '@speaker3',
+		// 	wallet: 0,
+
+		// 	password
+		// },
+		// {
+		// 	name: 'Attendee 1',
+		// 	email: 'attendee1@keystonejs.com',
+		// 	twitterHandle: `@attendee1`,
+		// 	wallet: 0,
+
+		// 	password
+		// },
+		// {
+		// 	name: 'Attendee 2',
+		// 	email: 'attendee2@keystonejs.com',
+		// 	twitterHandle: `@attendee2`,
+		// 	wallet: 0,
+
+		// 	password
+		// },
+		// {
+		// 	name: 'Attendee 3',
+		// 	email: 'attendee3@keystonejs.com',
+		// 	twitterHandle: `@attendee3`,
+		// 	wallet: 0,
+
+		// 	password
+		// }
 	],
 	// Organiser: [
 	// 	{ user: { where: { name: 'Organiser 1' } }, order: 1, role: 'Organiser' },
@@ -125,17 +125,17 @@ const initialData = {
 	// 	{ user: { where: { name: 'Organiser 3' } }, order: 3, role: 'Organiser' }
 	// ],
 	Event: [
-		{
-			name: '麻將',
-			status: 'active',
-			themeColor: '#334455',
-			// Default to "1 month from now"
-			startTime: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-			durationMins: 150,
-			maxRsvps: 120,
-			isRsvpAvailable: true,
-			rate: 10200
-		}
+		// {
+		// 	name: '麻將',
+		// 	status: 'active',
+		// 	themeColor: '#334455',
+		// 	// Default to "1 month from now"
+		// 	startTime: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+		// 	durationMins: 150,
+		// 	maxRsvps: 120,
+		// 	isRsvpAvailable: true
+		// 	// rate: 10200
+		// }
 	],
 	// Talk: [
 	// 	{ name: 'Introducing Keystone 5 🎉' },

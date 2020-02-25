@@ -128,14 +128,14 @@ const AnonActions = () => {
 			<AuthModal mode="signin">
 				{({ openModal }) => (
 					<NavLink href="/signin" onClick={openModal}>
-						Sign in
+						登入
 					</NavLink>
 				)}
 			</AuthModal>
 			<AuthModal mode="signup">
 				{({ openModal }) => (
 					<NavButton href="/signup" onClick={openModal}>
-						Join
+						加入
 					</NavButton>
 				)}
 			</AuthModal>
@@ -160,9 +160,9 @@ const Navbar = ({ background = 'white', ...props }) => {
 					<h1 style={{ color: 'white', marginRight: '10px' }}>BV</h1>
 				</Link>
 				<div css={{ flex: 1 }}>
-					<NavLink href="/">Now</NavLink>
-					<NavLink href="/events">Events</NavLink>
-					{user && <NavLink href="/profile">Profile</NavLink>}
+					{/*<NavLink href="/">今日活動</NavLink>*/}
+					<NavLink href="/events">活動總覽</NavLink>
+					{user && <NavLink href="/profile">個人資料</NavLink>}
 				</div>
 				{isAuthenticated ? <UserActions user={user} /> : <AnonActions />}
 			</Header>

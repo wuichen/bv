@@ -256,6 +256,7 @@ const Sponsors = () => {
 };
 
 function processHappeningEvent(data) {
+	console.log(data);
 	if (data && data.allEvents && data.allEvents.length > 0) {
 		return {
 			featuredEvent: data.allEvents[0]

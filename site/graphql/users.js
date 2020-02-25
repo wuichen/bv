@@ -9,3 +9,45 @@ export const CREATE_USER = gql`
 		}
 	}
 `;
+
+export const USER = gql`
+	query user {
+		authenticatedUser {
+			id
+			name
+			email
+			twitterHandle
+			wallet
+			services {
+				id
+				name
+				description
+				address
+				type
+				rate
+			}
+			rsvps {
+				id
+				paid
+				startTime
+				endTime
+				amount
+				event {
+					id
+					name
+				}
+			}
+			image {
+				publicUrlTransformed(
+					transformation: {
+						quality: "40"
+						width: "90"
+						height: "90"
+						crop: "thumb"
+						page: "1"
+					}
+				)
+			}
+		}
+	}
+`;

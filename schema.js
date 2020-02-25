@@ -62,9 +62,9 @@ exports.User = {
 			ref: 'Event.user',
 			many: true
 		},
-		rooms: {
+		services: {
 			type: Relationship,
-			ref: 'Room.user',
+			ref: 'Service.user',
 			many: true
 		},
 		rsvps: {
@@ -117,7 +117,7 @@ exports.Event = {
 	// access: DEFAULT_LIST_ACCESS,
 	fields: {
 		name: { type: Text },
-		rate: { type: Integer },
+		rate: { type: Integer }, // TODO: delete
 		status: { type: Select, options: 'draft, active', defaultValue: 'draft' },
 		themeColor: { type: Text },
 		startTime: { type: DateTime },
@@ -125,8 +125,8 @@ exports.Event = {
 		durationMins: { type: Integer },
 		description: { type: Wysiwyg },
 		talks: { type: Relationship, ref: 'Talk.event', many: true },
-		locationAddress: { type: Text },
-		locationDescription: { type: Text },
+		locationAddress: { type: Text }, // TODO: delete
+		locationDescription: { type: Text }, // TODO: delete
 		maxRsvps: { type: Integer, defaultValue: 120 },
 		isRsvpAvailable: { type: Checkbox, defaultValue: true },
 		user: {
@@ -138,20 +138,21 @@ exports.Event = {
 			ref: 'Rsvp.event',
 			many: true
 		},
-		room: {
+		service: {
 			type: Relationship,
-			ref: 'Room.events'
+			ref: 'Service.events'
 		}
 	}
 };
 
-exports.Room = {
+exports.Service = {
 	// access: DEFAULT_LIST_ACCESS,
 	fields: {
 		name: { type: Text },
-		events: { type: Relationship, ref: 'Event.room', many: true },
-		user: { type: Relationship, ref: 'User.rooms' },
+		events: { type: Relationship, ref: 'Event.service', many: true },
+		user: { type: Relationship, ref: 'User.services' },
 		description: { type: Wysiwyg },
+		type: { type: Text }, // friends split, hourly, product, recurring
 		rate: { type: Integer },
 		address: { type: Text }
 	}

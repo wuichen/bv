@@ -9,7 +9,9 @@ const MEETUP = {
 		height: 96
 	},
 	homeIntro: `
-<p>Welcome to BV! Please check in to let Steven know if you're joining tonight.</p>
+<p>請大家來時登入簽到, 結束時簽退, 沒簽退的就算退房時間簽退.方便我計算大家的使用,謝謝！</p>
+<p>目前公式: (簽退時間 - 簽到時間) x 房間錢 x 帶多少人 / 目前房間總人數 </p>
+
 `,
 	colorPalette: [],
 	codeOfConduct: `

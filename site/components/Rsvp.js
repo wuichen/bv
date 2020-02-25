@@ -68,7 +68,7 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 							{({ openModal }) => (
 								<ButtonWrapper>
 									<Button href="/signin" onClick={openModal}>
-										Sign In to join
+										登入簽到
 									</Button>
 								</ButtonWrapper>
 							)}
@@ -191,7 +191,7 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 													}
 												}}
 											>
-												{userResponse.endTime ? 'Checked out' : 'Check out'}
+												{userResponse.endTime ? '已簽退' : '簽退'}
 											</Button>
 										) : (
 											<>
@@ -307,6 +307,7 @@ const USER = gql`
 				endTime
 				amount
 				event {
+					id
 					name
 				}
 			}
