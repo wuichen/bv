@@ -26,7 +26,6 @@ const keystone = new Keystone({
 	adapter: new MongooseAdapter({
 		mongoUri: process.env.MONGO_URI
 	}),
-	secureCookies: false,
 	onConnect: initialiseData
 });
 
