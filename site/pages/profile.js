@@ -83,10 +83,7 @@ const NewProfile = ({ user }) => {
 	return (
 		<div
 			style={{
-				padding: '30px',
-				maxWidth: '400px',
-				marginLeft: 'auto',
-				marginRight: 'auto'
+				padding: '30px'
 			}}
 		>
 			<div style={{ marginBottom: '40px' }}>
