@@ -116,6 +116,10 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 					},
 					{
 						query: USER
+					},
+					{
+						query: GET_EVENT_RSVPS,
+						variables: { event: eventId }
 					}
 				];
 
@@ -222,7 +226,7 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 													background={themeColor}
 													onClick={respondYes}
 												>
-													Check In
+													簽到
 												</Button>
 												{/*<Button
 													disabled={mutationLoading || !isGoing}

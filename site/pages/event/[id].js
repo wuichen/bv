@@ -141,6 +141,7 @@ export default class Event extends Component {
 														src={rsvp.user.image && rsvp.user.image.small}
 													/>
 													<div>{rsvp.user.name}</div>
+													<div>{rsvp.numberOfGuests}</div>
 												</div>
 											))}
 									</div>

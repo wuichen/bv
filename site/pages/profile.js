@@ -88,8 +88,8 @@ const NewProfile = ({ user }) => {
 	return (
 		<Container
 			css={mq({
-				padding: '30px',
-				width: ['350px', '600px'],
+				padding: ['15px', '30px'],
+				width: ['300px', '600px'],
 				margin: 'auto'
 			})}
 		>

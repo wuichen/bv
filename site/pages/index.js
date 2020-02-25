@@ -32,7 +32,8 @@ import {
 	formatFutureDate,
 	formatPastDate,
 	getForegroundColor,
-	pluralLabel
+	pluralLabel,
+	isInToday
 } from '../helpers';
 import { mq } from '../helpers/media';
 import { Component } from 'react';
@@ -173,10 +174,13 @@ const FeaturedEvent = ({ isLoading, error, event }) => {
 									if (error) return <Error error={error} />;
 
 									const { allRsvps } = data;
-
 									if (!allRsvps) return null;
-
-									const attending = `${allRsvps.length}${
+									const attendingCount = allRsvps.reduce((total, rsvp) => {
+										return (
+											(rsvp.numberOfGuests ? rsvp.numberOfGuests : 1) + total
+										);
+									}, 0);
+									const attending = `${attendingCount}${
 										maxRsvps ? `/${maxRsvps}` : ''
 									}`;
 
@@ -192,7 +196,7 @@ const FeaturedEvent = ({ isLoading, error, event }) => {
 											>
 												<UserIcon color="#ccc" css={{ marginRight: '0.5em' }} />
 												{attending}{' '}
-												{isInFuture(startTime) ? 'attending' : 'attended'}
+												{isInToday(startTime) ? 'attending' : 'attended'}
 											</div>
 											<AvatarStack
 												users={allRsvps

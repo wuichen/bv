@@ -51,13 +51,12 @@ export const UPDATE_RSVP = gql`
 
 export const GET_EVENT_RSVPS = gql`
 	query GetEventRsvps($event: ID!) {
-		allRsvps(
-			where: { event: { id: $event }, status: yes, user_is_null: false }
-		) {
+		allRsvps(where: { event: { id: $event }, user_is_null: false }) {
 			id
 			status
 			startTime
 			endTime
+			numberOfGuests
 			user {
 				id
 				name
