@@ -15,30 +15,28 @@ import { USER } from '../graphql/users';
 import { Button, Field, Group, Label, Link, Input } from '../primitives/forms';
 export default () => {
 	return (
-		<Query query={USER}>
-			{({ data, loading, error }) => {
-				if (loading) {
-					return <div>loading</div>;
-				}
-				if (error) {
-					console.log(error);
-					return <div>somethings wrong</div>;
-				}
-				if (data && data.authenticatedUser) {
-					return (
-						<>
-							<Navbar background="black" />
-							<NewProfile user={data.authenticatedUser} />
-						</>
-					);
-				} else {
-					if (typeof window !== 'undefined') {
-						window.location.replace('/');
+		<>
+			<Navbar background="black" />
+			<Query query={USER}>
+				{({ data, loading, error }) => {
+					if (loading) {
+						return <div>loading</div>;
 					}
-					return null;
-				}
-			}}
-		</Query>
+					if (error) {
+						console.log(error);
+						return <div>somethings wrong</div>;
+					}
+					if (data) {
+						console.log(data);
+						if (data.authenticatedUser) {
+							return <NewProfile user={data.authenticatedUser} />;
+						} else {
+							return <div>contact steven</div>;
+						}
+					}
+				}}
+			</Query>
+		</>
 	);
 };
 
