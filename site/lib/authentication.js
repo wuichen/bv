@@ -1,7 +1,7 @@
 import React, { Component, createContext, useContext } from 'react';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
-
+import cookies from 'js-cookie';
 /**
  * AuthContext
  * -----------
@@ -97,6 +97,7 @@ class AuthProviderClass extends Component {
               item {
                 ${userFragment}
               }
+							token
             }
           }
         `,
@@ -112,6 +113,12 @@ class AuthProviderClass extends Component {
 				if (authenticateUserWithPassword && authenticateUserWithPassword.item) {
 					this.setUserData(authenticateUserWithPassword.item);
 				}
+				if (
+					authenticateUserWithPassword &&
+					authenticateUserWithPassword.token
+				) {
+					cookies.set('token', token);
+				}
 			})
 			.catch(error => {
 				console.error(error);
@@ -122,6 +129,7 @@ class AuthProviderClass extends Component {
 
 	signout = async () => {
 		this.setState({ error: null, isLoading: true });
+		localStorage.removeItem('token');
 		return this.props.client
 			.mutate({
 				mutation: gql`
