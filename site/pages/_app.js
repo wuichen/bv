@@ -52,7 +52,7 @@ class MyApp extends App {
 							/>
 							<meta name="description" content="Description" />
 							<meta name="keywords" content="Keywords" />
-							<title>Next.js PWA Example</title>
+							<title>BV</title>
 
 							<link rel="manifest" href="/manifest.json" />
 							<link
