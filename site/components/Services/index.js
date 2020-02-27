@@ -33,6 +33,7 @@ const Services = ({ user, setTab }) => {
 					>
 						<div>
 							<h4>{service.name}</h4>
+							<div>價格: ${service.rate} / 小時</div>
 						</div>
 					</div>
 				);

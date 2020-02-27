@@ -165,28 +165,24 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 												background={themeColor}
 												onClick={async () => {
 													try {
-														const amount = Math.round(
-															(((thisMoment.getTime() -
-																new Date(userRsvps[0].startTime).getTime()) /
-																60000) *
-															userRsvps[0].numberOfGuests
+														const timeDifference =
+															thisMoment - new Date(userRsvps[0].startTime);
+														const timeDifferenceInHour =
+															timeDifference / 3600000;
+														const timeDifferenceInHourWithTimesGuestNumber =
+															timeDifferenceInHour * userRsvps[0].numberOfGuests
 																? userRsvps[0].numberOfGuests
-																: 1 * (event.rate / 60)) /
-																eventRsvps.reduce((total, rsvp) => {
-																	return (
-																		(rsvp.numberOfGuests
-																			? rsvp.numberOfGuests
-																			: 1) + total
-																	);
-																}, 0)
-														);
-														console.log(amount, thisMoment, userRsvps);
+																: 1;
+														const final =
+															timeDifferenceInHourWithTimesGuestNumber *
+															event.rate;
+
 														await updateRsvp({
 															variables: {
 																rsvp: userResponse.id,
 																user: user.id,
 																status: userResponse.status,
-																amount,
+																amount: final,
 																endTime: thisMoment.toISOString()
 															}
 														});
