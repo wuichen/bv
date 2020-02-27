@@ -170,13 +170,37 @@ const Rsvp = ({ children, event, text, themeColor }) => {
 														const timeDifferenceInHour =
 															timeDifference / 3600000;
 														const timeDifferenceInHourWithTimesGuestNumber =
-															timeDifferenceInHour * userRsvps[0].numberOfGuests
+															timeDifferenceInHour *
+															(userRsvps[0].numberOfGuests
 																? userRsvps[0].numberOfGuests
-																: 1;
-														const final =
-															timeDifferenceInHourWithTimesGuestNumber *
-															event.rate;
+																: 1);
 
+														const roomRateDivideCurrentGuestsCount =
+															event.rate /
+															eventRsvps.reduce((total, rsvp) => {
+																return (
+																	(rsvp.numberOfGuests
+																		? rsvp.numberOfGuests
+																		: 1) + total
+																);
+															}, 0);
+
+														const timeDifferenceInHourWithTimesGuestNumberTimesRate =
+															timeDifferenceInHourWithTimesGuestNumber *
+															roomRateDivideCurrentGuestsCount;
+
+														const final = Math.floor(
+															timeDifferenceInHourWithTimesGuestNumberTimesRate
+														);
+
+														console.log(
+															thisMoment,
+															new Date(userRsvps[0].startTime),
+															timeDifference,
+															timeDifferenceInHour,
+															timeDifferenceInHourWithTimesGuestNumber,
+															final
+														);
 														await updateRsvp({
 															variables: {
 																rsvp: userResponse.id,

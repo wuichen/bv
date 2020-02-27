@@ -40,6 +40,7 @@ const Bookings = ({ user }) => {
 						<div>
 							<h4>付款: {rsvp.paid ? 'Paid' : 'Not Yet'}</h4>
 							<div>金額: {rsvp.amount}</div>
+							<div>人數: {rsvp.numberOfGuests}</div>
 						</div>
 					</div>
 				);

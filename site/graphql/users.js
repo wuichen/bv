@@ -32,6 +32,7 @@ export const USER = gql`
 				startTime
 				endTime
 				amount
+				numberOfGuests
 				event {
 					id
 					name
