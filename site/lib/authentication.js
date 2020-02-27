@@ -86,6 +86,7 @@ class AuthProviderClass extends Component {
 
 	signin = async ({ email, password }) => {
 		this.setState({ error: null, isLoading: true });
+		email = email.toLowerCase();
 		// NOTE: We are not capturing the `token` here on purpose; The GraphQL API
 		// will set a `keystone.sid` cookie on its domain, which will be
 		// automatically read for each subsequent query.
